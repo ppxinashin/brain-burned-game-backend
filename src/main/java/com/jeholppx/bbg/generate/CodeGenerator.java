@@ -1,5 +1,6 @@
 package com.jeholppx.bbg.generate;
 
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.io.FileUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -15,8 +16,8 @@ import java.io.Writer;
 /**
  * 代码生成器
  *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://www.code-nav.cn">编程导航学习圈</a>
+ * @author <a href="https://www.jehol-ppx.com">热河fen青</a>
+ * @date 
  */
 public class CodeGenerator {
 
@@ -30,9 +31,9 @@ public class CodeGenerator {
     public static void main(String[] args) throws TemplateException, IOException {
         // 指定生成参数
         String packageName = "com.jeholppx.bbg";
-        String dataName = "用户评论";
-        String dataKey = "userComment";
-        String upperDataKey = "UserComment";
+        String dataName = "用户答案";
+        String dataKey = "userAnswer";
+        String upperDataKey = "UserAnswer";
 
         // 封装生成参数
         Map<String, Object> dataModel = new HashMap<>();
@@ -40,6 +41,7 @@ public class CodeGenerator {
         dataModel.put("dataName", dataName);
         dataModel.put("dataKey", dataKey);
         dataModel.put("upperDataKey", upperDataKey);
+        dataModel.put("date", DateTime.now().toString("yyyy/MM/dd HH:mm"));
 
         // 生成路径默认值
         String projectPath = System.getProperty("user.dir");

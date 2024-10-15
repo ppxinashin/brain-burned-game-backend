@@ -5,8 +5,8 @@ import com.jeholppx.bbg.common.ErrorCode;
 /**
  * 自定义异常类
  *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
+ * @author <a href="https://www.jehol-ppx.com">热河fen青</a>
+ * @date 2024/10/14 19:00
  */
 public class BusinessException extends RuntimeException {
 

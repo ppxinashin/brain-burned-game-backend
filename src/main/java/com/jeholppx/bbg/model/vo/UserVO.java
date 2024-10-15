@@ -7,8 +7,8 @@ import lombok.Data;
 /**
  * 用户视图（脱敏）
  *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
+ * @author <a href="https://www.jehol-ppx.com">热河fen青</a>
+ * @date 2024/10/14 19:00
  */
 @Data
 public class UserVO implements Serializable {

@@ -80,7 +80,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:13306/my_db
+    url: jdbc:mysql://localhost:13306/bbg
     username: root
     password: 1qaz!QAZ
 ```

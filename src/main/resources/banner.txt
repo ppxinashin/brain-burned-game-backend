@@ -1,4 +1,2 @@
-base on 程序员鱼皮：https://github.com/liyupi
-可能是最好的编程学习圈子：https://www.code-nav.cn
-
 热河fen青主页：https://www.jehol-ppx.com
+基于鲤鱼皮的框架开发，快速生成代码，提高开发效率，减少重复劳动，让开发更简单、更快乐！

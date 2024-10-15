@@ -12,8 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 /**
  * 帖子收藏数据库操作测试
  *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
+ * @author <a href="https://www.jehol-ppx.com">热河fen青</a>
+ * @date 2024/10/14 19:00
  */
 @SpringBootTest
 class PostFavourMapperTest {
