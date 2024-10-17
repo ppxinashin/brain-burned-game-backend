@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 题目接口
@@ -55,8 +56,8 @@ public class QuestionController {
         // 在此处将实体类和 DTO 进行转换
         Question question = new Question();
         BeanUtils.copyProperties(questionAddRequest, question);
-        QuestionContentDTO questionContentDTO = questionAddRequest.getQuestionContent();
-        question.setQuestionContent(JSONUtil.toJsonStr(questionContentDTO));
+        List<QuestionContentDTO> questionContents = questionAddRequest.getQuestionContent();
+        question.setQuestionContent(JSONUtil.toJsonStr(questionContents));
         // 数据校验
         questionService.validQuestion(question, true);
         // 填充默认值
@@ -112,8 +113,8 @@ public class QuestionController {
         // 在此处将实体类和 DTO 进行转换
         Question question = new Question();
         BeanUtils.copyProperties(questionUpdateRequest, question);
-        QuestionContentDTO questionContentDTO = questionUpdateRequest.getQuestionContent();
-        question.setQuestionContent(JSONUtil.toJsonStr(questionContentDTO));
+        List<QuestionContentDTO> questionContents = questionUpdateRequest.getQuestionContent();
+        question.setQuestionContent(JSONUtil.toJsonStr(questionContents));
         // 数据校验
         questionService.validQuestion(question, false);
         // 判断是否存在
@@ -220,8 +221,8 @@ public class QuestionController {
         // 在此处将实体类和 DTO 进行转换
         Question question = new Question();
         BeanUtils.copyProperties(questionEditRequest, question);
-        QuestionContentDTO questionContentDTO = questionEditRequest.getQuestionContent();
-        question.setQuestionContent(JSONUtil.toJsonStr(questionContentDTO));
+        List<QuestionContentDTO> questionContents = questionEditRequest.getQuestionContent();
+        question.setQuestionContent(JSONUtil.toJsonStr(questionContents));
         // 数据校验
         questionService.validQuestion(question, false);
         User loginUser = userService.getLoginUser(request);

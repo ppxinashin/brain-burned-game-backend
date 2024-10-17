@@ -27,7 +27,7 @@ public class UserAnswerEditRequest implements Serializable {
     /**
      * 用户答案（JSON 数组）
      */
-    private String choices;
+    private List<String> choices;
 
     private static final long serialVersionUID = 1L;
 }

@@ -97,6 +97,7 @@ public class UserAnswerServiceImpl extends ServiceImpl<UserAnswerMapper, UserAns
         String searchText = userAnswerQueryRequest.getSearchText();
         String sortField = userAnswerQueryRequest.getSortField();
         String sortOrder = userAnswerQueryRequest.getSortOrder();
+        Integer scoringStrategy = userAnswerQueryRequest.getScoringStrategy();
 
         // 补充需要的查询条件
         // 从多字段中搜索
@@ -114,6 +115,7 @@ public class UserAnswerServiceImpl extends ServiceImpl<UserAnswerMapper, UserAns
         queryWrapper.eq(ObjectUtils.isNotEmpty(userId), "userId", userId);
         queryWrapper.eq(ObjectUtils.isNotEmpty(resultScore), "resultScore", resultScore);
         queryWrapper.eq(ObjectUtils.isNotEmpty(appId), "appId", appId);
+        queryWrapper.eq(ObjectUtils.isNotEmpty(scoringStrategy), "scoringStrategy", scoringStrategy);
         // 排序规则
         queryWrapper.orderBy(SqlUtils.validSortField(sortField),
                 sortOrder.equals(CommonConstant.SORT_ORDER_ASC),

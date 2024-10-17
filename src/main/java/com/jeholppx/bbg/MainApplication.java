@@ -13,7 +13,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @author <a href="https://www.jehol-ppx.com">热河fen青</a>
  * @date 2024/10/14 19:00
  */
-// todo 如需开启 Redis，须移除 exclude 中的内容
 @SpringBootApplication(exclude = {RedisAutoConfiguration.class})
 @MapperScan("com.jeholppx.bbg.mapper")
 @EnableScheduling

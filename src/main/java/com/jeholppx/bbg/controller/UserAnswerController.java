@@ -1,5 +1,6 @@
 package com.jeholppx.bbg.controller;
 
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jeholppx.bbg.annotation.AuthCheck;
 import com.jeholppx.bbg.common.BaseResponse;
@@ -13,9 +14,13 @@ import com.jeholppx.bbg.model.dto.userAnswer.UserAnswerAddRequest;
 import com.jeholppx.bbg.model.dto.userAnswer.UserAnswerEditRequest;
 import com.jeholppx.bbg.model.dto.userAnswer.UserAnswerQueryRequest;
 import com.jeholppx.bbg.model.dto.userAnswer.UserAnswerUpdateRequest;
+import com.jeholppx.bbg.model.entity.App;
 import com.jeholppx.bbg.model.entity.UserAnswer;
 import com.jeholppx.bbg.model.entity.User;
+import com.jeholppx.bbg.model.enums.ReviewStatusEnum;
 import com.jeholppx.bbg.model.vo.UserAnswerVO;
+import com.jeholppx.bbg.scoring.ScoringStrategyExecutor;
+import com.jeholppx.bbg.service.AppService;
 import com.jeholppx.bbg.service.UserAnswerService;
 import com.jeholppx.bbg.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 用户答案接口
@@ -42,6 +48,12 @@ public class UserAnswerController {
     @Resource
     private UserService userService;
 
+    @Resource
+    private ScoringStrategyExecutor scoringStrategyExecutor;
+
+    @Resource
+    private AppService appService;
+
     // region 增删改查
 
     /**
@@ -57,8 +69,18 @@ public class UserAnswerController {
         // 在此处将实体类和 DTO 进行转换
         UserAnswer userAnswer = new UserAnswer();
         BeanUtils.copyProperties(userAnswerAddRequest, userAnswer);
+        List<String> choices = userAnswerAddRequest.getChoices();
+        userAnswer.setChoices(JSONUtil.toJsonStr(choices));
         // 数据校验
         userAnswerService.validUserAnswer(userAnswer, true);
+        // 判断 app 是否存在
+        Long appId = userAnswer.getAppId();
+        App app = appService.getById(appId);
+        ThrowUtils.throwIf(app == null, ErrorCode.NOT_FOUND_ERROR);
+        // 校验App是否通过
+        Integer reviewStatus = app.getReviewStatus();
+        ReviewStatusEnum reviewStatusEnum = ReviewStatusEnum.getEnumByValue(reviewStatus);
+        ThrowUtils.throwIf(!ReviewStatusEnum.PASS.equals(reviewStatusEnum), ErrorCode.NO_AUTH_ERROR, "应用未过审，请勿作答");
         // 填充默认值
         User loginUser = userService.getLoginUser(request);
         userAnswer.setUserId(loginUser.getId());
@@ -67,6 +89,16 @@ public class UserAnswerController {
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         // 返回新写入的数据 id
         long newUserAnswerId = userAnswer.getId();
+        // 调用评分模块
+
+        try {
+            UserAnswer userAnsWithResult = scoringStrategyExecutor.doScore(choices, app);
+            userAnsWithResult.setId(newUserAnswerId);
+            userAnswerService.updateById(userAnsWithResult);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "评分错误");
+        }
         return ResultUtils.success(newUserAnswerId);
     }
 
@@ -112,6 +144,8 @@ public class UserAnswerController {
         // 在此处将实体类和 DTO 进行转换
         UserAnswer userAnswer = new UserAnswer();
         BeanUtils.copyProperties(userAnswerUpdateRequest, userAnswer);
+        List<String> choices = userAnswerUpdateRequest.getChoices();
+        userAnswer.setChoices(JSONUtil.toJsonStr(choices));
         // 数据校验
         userAnswerService.validUserAnswer(userAnswer, false);
         // 判断是否存在
@@ -218,6 +252,8 @@ public class UserAnswerController {
         // 在此处将实体类和 DTO 进行转换
         UserAnswer userAnswer = new UserAnswer();
         BeanUtils.copyProperties(userAnswerEditRequest, userAnswer);
+        List<String> choices = userAnswerEditRequest.getChoices();
+        userAnswer.setChoices(JSONUtil.toJsonStr(choices));
         // 数据校验
         userAnswerService.validUserAnswer(userAnswer, false);
         User loginUser = userService.getLoginUser(request);
