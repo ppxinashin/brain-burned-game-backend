@@ -66,7 +66,7 @@ public class CustomScoreScoringStrategy implements ScoringStrategy {
             // 遍历题目中的选项
             for (QuestionContentDTO.Option option : options) {
                 // 如果选项的值和用户选择的值相等，则将选项的分数加到总分上
-                if (option.getValue().equals(choices.get(i))) {
+                if (option.getKey().equals(choices.get(i))) {
                     totalScore += Optional.of(option.getScore()).orElse(0);
                     break;
                 }

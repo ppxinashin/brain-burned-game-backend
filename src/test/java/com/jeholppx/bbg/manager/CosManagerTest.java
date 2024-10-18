@@ -18,6 +18,6 @@ class CosManagerTest {
 
     @Test
     void putObject() {
-        cosManager.putObject("test", "test.json");
+        cosManager.putObject("test", "E:\\java_proj\\brain-burned-game-backend\\src\\main\\resources\\test.txt");
     }
 }
