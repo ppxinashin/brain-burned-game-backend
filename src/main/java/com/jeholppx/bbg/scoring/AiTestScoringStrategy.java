@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * AI 评分类应用评分策略
+ * AI 测评类应用评分策略
  *
  * @author <a href="https://www.jehol-ppx.com">热河fen青</a>
  * @date 2024/10/19 11:18
