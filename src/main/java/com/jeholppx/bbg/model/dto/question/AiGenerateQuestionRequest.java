@@ -28,10 +28,5 @@ public class AiGenerateQuestionRequest implements Serializable {
      */
     int optionNumber = 2;
 
-    /**
-     * 分数
-     */
-    private Integer score;
-
     private static final long serialVersionUID = 1L;
 }
