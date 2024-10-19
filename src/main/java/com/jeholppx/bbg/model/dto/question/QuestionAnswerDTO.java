@@ -20,4 +20,14 @@ public class QuestionAnswerDTO {
      * 用户答案
      */
     private String userAnswer;
+
+    /**
+     * 正确答案
+     */
+    private String correctAnswer;
+
+    /**
+     * 正确得分
+     */
+    private Integer score;
 }
