@@ -9,9 +9,9 @@ package com.jeholppx.bbg.constant;
 public interface UserConstant {
 
     /**
-     * 用户登录态键
+     * 用户登录token
      */
-    String USER_LOGIN_STATE = "user_login";
+    String TOKEN = "token";
 
     //  region 权限
 

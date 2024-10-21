@@ -9,32 +9,20 @@ import com.jeholppx.bbg.common.ResultUtils;
 import com.jeholppx.bbg.constant.UserConstant;
 import com.jeholppx.bbg.exception.BusinessException;
 import com.jeholppx.bbg.exception.ThrowUtils;
-import com.jeholppx.bbg.model.dto.user.UserAddRequest;
-import com.jeholppx.bbg.model.dto.user.UserLoginRequest;
-import com.jeholppx.bbg.model.dto.user.UserQueryRequest;
-import com.jeholppx.bbg.model.dto.user.UserRegisterRequest;
-import com.jeholppx.bbg.model.dto.user.UserUpdateMyRequest;
-import com.jeholppx.bbg.model.dto.user.UserUpdateRequest;
+import com.jeholppx.bbg.model.dto.user.*;
 import com.jeholppx.bbg.model.entity.User;
 import com.jeholppx.bbg.model.vo.LoginUserVO;
 import com.jeholppx.bbg.model.vo.UserVO;
 import com.jeholppx.bbg.service.UserService;
-
-import java.util.List;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 import static com.jeholppx.bbg.service.impl.UserServiceImpl.SALT;
 
@@ -283,7 +271,7 @@ public class UserController {
         User user = new User();
         BeanUtils.copyProperties(userUpdateMyRequest, user);
         user.setId(loginUser.getId());
-        boolean result = userService.updateById(user);
+        boolean result = userService.updateByIdWithRequest(user, request);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
     }

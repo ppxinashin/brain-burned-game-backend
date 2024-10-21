@@ -6,8 +6,9 @@ import com.jeholppx.bbg.model.dto.user.UserQueryRequest;
 import com.jeholppx.bbg.model.entity.User;
 import com.jeholppx.bbg.model.vo.LoginUserVO;
 import com.jeholppx.bbg.model.vo.UserVO;
-import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 用户服务
@@ -107,5 +108,14 @@ public interface UserService extends IService<User> {
      * @return
      */
     QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
+
+    /**
+     * 根据 id 更新用户信息
+     *
+     * @param user
+     * @param request
+     * @return
+     */
+    boolean updateByIdWithRequest(User user, HttpServletRequest request);
 
 }
