@@ -7,24 +7,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * App 类型枚举
+ * 支付类型枚举
  *
  * @author <a href="https://www.jehol-ppx.com">热河fen青</a>
- * @date 2024/10/14 14:51
+ * @date 2024/10/20 16:32
  */
-public enum AppTypeEnum {
-    // 得分类
-    SCORE("得分类", 0),
-    // 测评类
-    TEST("测评类", 1),
-    // 奖励类
-    REWARD("奖励类", 2);
+public enum PaymentTypeEnum {
+    // 免费
+    FREE("免费", 0),
+    // 积分支付
+    CREDIT_PAY("积分支付", 1);
 
     private final String text;
 
     private final int value;
 
-    AppTypeEnum(String text, int value) {
+    PaymentTypeEnum(String text, int value) {
         this.text = text;
         this.value = value;
     }
@@ -35,11 +33,11 @@ public enum AppTypeEnum {
      * @param value
      * @return
      */
-    public static AppTypeEnum getEnumByValue(Integer value) {
+    public static PaymentTypeEnum getEnumByValue(Integer value) {
         if (ObjectUtil.isEmpty(value)) {
             return null;
         }
-        for (AppTypeEnum anEnum : AppTypeEnum.values()) {
+        for (PaymentTypeEnum anEnum : PaymentTypeEnum.values()) {
             if (anEnum.value == value) {
                 return anEnum;
             }
