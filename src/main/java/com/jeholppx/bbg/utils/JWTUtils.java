@@ -41,7 +41,7 @@ public class JWTUtils {
     /**
      * 默认过期时长 单位：天
      */
-    private static final int EXPIRATION_DATE = 30;
+    private static final int EXPIRATION_DATE = 3;
 
     /**
      * 生成token，并存储用户信息到Redis
