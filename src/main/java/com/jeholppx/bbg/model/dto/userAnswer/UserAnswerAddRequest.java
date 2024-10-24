@@ -1,12 +1,8 @@
 package com.jeholppx.bbg.model.dto.userAnswer;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,6 +13,11 @@ import java.util.List;
  */
 @Data
 public class UserAnswerAddRequest implements Serializable {
+
+    /**
+     * id
+     */
+    private Long id;
 
     /**
      * 应用 id

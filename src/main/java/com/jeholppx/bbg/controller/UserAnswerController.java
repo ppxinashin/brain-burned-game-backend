@@ -1,5 +1,6 @@
 package com.jeholppx.bbg.controller;
 
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jeholppx.bbg.annotation.AuthCheck;
@@ -15,8 +16,8 @@ import com.jeholppx.bbg.model.dto.userAnswer.UserAnswerEditRequest;
 import com.jeholppx.bbg.model.dto.userAnswer.UserAnswerQueryRequest;
 import com.jeholppx.bbg.model.dto.userAnswer.UserAnswerUpdateRequest;
 import com.jeholppx.bbg.model.entity.App;
-import com.jeholppx.bbg.model.entity.UserAnswer;
 import com.jeholppx.bbg.model.entity.User;
+import com.jeholppx.bbg.model.entity.UserAnswer;
 import com.jeholppx.bbg.model.enums.ReviewStatusEnum;
 import com.jeholppx.bbg.model.vo.UserAnswerVO;
 import com.jeholppx.bbg.scoring.ScoringStrategyExecutor;
@@ -25,6 +26,7 @@ import com.jeholppx.bbg.service.UserAnswerService;
 import com.jeholppx.bbg.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -85,8 +87,11 @@ public class UserAnswerController {
         User loginUser = userService.getLoginUser(request);
         userAnswer.setUserId(loginUser.getId());
         // 写入数据库
-        boolean result = userAnswerService.save(userAnswer);
-        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        try {
+            boolean result = userAnswerService.save(userAnswer);
+            ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        } catch (DuplicateKeyException ignore) {}
+
         // 返回新写入的数据 id
         long newUserAnswerId = userAnswer.getId();
         // 调用评分模块
@@ -94,6 +99,7 @@ public class UserAnswerController {
         try {
             UserAnswer userAnsWithResult = scoringStrategyExecutor.doScore(choices, app);
             userAnsWithResult.setId(newUserAnswerId);
+            userAnsWithResult.setAppId(null);
             userAnswerService.updateById(userAnsWithResult);
         } catch (Exception e) {
             e.printStackTrace();
@@ -270,6 +276,12 @@ public class UserAnswerController {
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
     }
+
+    @GetMapping("/generate/id")
+    public BaseResponse<Long> generateUserAnswerId() {
+        return ResultUtils.success(IdUtil.getSnowflakeNextId());
+    }
+
 
     // endregion
 }

@@ -23,6 +23,7 @@ import com.jeholppx.bbg.service.AppService;
 import com.jeholppx.bbg.service.QuestionService;
 import com.jeholppx.bbg.service.UserService;
 import io.reactivex.Flowable;
+import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -58,6 +59,9 @@ public class QuestionController {
 
     @Resource
     private AiManager aiManager;
+
+    @Resource
+    private Scheduler vipScheduler;
 
     // region 增删改查
 
@@ -293,7 +297,7 @@ public class QuestionController {
      * @return
      */
     @GetMapping("/ai_generate/sse")
-    public SseEmitter aiGenerateQuestionSSE(AiGenerateQuestionRequest aiGenerateQuestionRequest) {
+    public SseEmitter aiGenerateQuestionSSE(AiGenerateQuestionRequest aiGenerateQuestionRequest, HttpServletRequest request) {
         ThrowUtils.throwIf(aiGenerateQuestionRequest == null, ErrorCode.PARAMS_ERROR);
         // 获取参数
         Long appId = aiGenerateQuestionRequest.getAppId();
@@ -302,7 +306,13 @@ public class QuestionController {
         // 获取应用信息
         App app = appService.getById(appId);
         ThrowUtils.throwIf(app == null, ErrorCode.NOT_FOUND_ERROR);
-
+        // 默认全局线程池
+        Scheduler scheduler = Schedulers.single();
+        User loginUser = userService.getLoginUser(request);
+        // 如果用户是 VIP，则使用定制线程池
+        if ("vip".equals(loginUser.getUserRole())) {
+            scheduler = vipScheduler;
+        }
         // 封装 Prompt
         String userMessage = getGenerateQuestionUserMessage(app, questionNumber, optionNumber);
         // 建立 SSE 连接对象，0 表示不超时
@@ -313,7 +323,7 @@ public class QuestionController {
         AtomicInteger flag = new AtomicInteger(0);
         modelDataFlowable
                 // 异步线程池执行
-                .observeOn(Schedulers.io())
+                .observeOn(scheduler)
                 .map(chunk -> chunk.getOutput().getChoices().get(0).getMessage().getContent())
                 .map(message -> message.replaceAll("\\s", ""))
                 .filter(StrUtil::isNotBlank)
